@@ -10,7 +10,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.tooling.preview.Preview
 import com.pstorli.wordrop.ui.theme.WordDropTheme
 
@@ -33,12 +34,12 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun Greeting (name: String, modifier: Modifier = Modifier) {
-    val configuration = LocalConfiguration.current
-    val screenHeight = configuration.screenHeightDp
-    val screenWidth = configuration.screenWidthDp
+    val windowInfo = LocalWindowInfo.current
+    val screenWidth = with(LocalDensity.current) { windowInfo.containerSize.width.toDp() }
+    val screenHeight = with(LocalDensity.current) { windowInfo.containerSize.height.toDp() }
     Text(
         text = "Hello $name\n"+
-                "Screen width is $screenWidth\n and screen height is $screenHeight",
+                "Screen width is $screenWidth and \nScreen height is $screenHeight",
         modifier = modifier
     )
 }
