@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -13,16 +14,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.tooling.preview.Preview
+import com.pstorli.wordrop.domain.data.Game
+import com.pstorli.wordrop.domain.model.Vm
 import com.pstorli.wordrop.ui.theme.WordDropTheme
+import com.pstorli.wordrop.util.Consts.SQ_SZ
+import kotlin.div
+import kotlin.getValue
 
 class MainActivity : ComponentActivity() {
+    val vm: Vm by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             WordDropTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
+                    WD(
                         name = "Android",
                         modifier = Modifier.padding(innerPadding)
                     )
@@ -30,24 +38,33 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-}
 
-@Composable
-fun Greeting (name: String, modifier: Modifier = Modifier) {
-    val windowInfo = LocalWindowInfo.current
-    val screenWidth = with(LocalDensity.current) { windowInfo.containerSize.width.toDp() }
-    val screenHeight = with(LocalDensity.current) { windowInfo.containerSize.height.toDp() }
-    Text(
-        text = "Hello $name\n"+
-                "Screen width is $screenWidth and \nScreen height is $screenHeight",
-        modifier = modifier
-    )
-}
+    @Preview(showBackground = true)
+    @Composable
+    fun GamePreview() {
+        WordDropTheme {
+            WD("Word Drop")
+        }
+    }
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview () {
-    WordDropTheme {
-        Greeting("Android")
+    @Composable
+    fun WD(name: String, modifier: Modifier = Modifier) {
+        // Get screen size
+        val windowInfo  = LocalWindowInfo.current
+        val screenWidth  = with(LocalDensity.current) { windowInfo.containerSize.width.toDp() }
+        val screenHeight = with(LocalDensity.current) { windowInfo.containerSize.height.toDp() }
+
+        val rows = (screenHeight/SQ_SZ).toInt()
+        val cols = (screenWidth/SQ_SZ).toInt()
+
+        // Start the game
+        vm.createGame (rows, cols)
+
+        Text(
+            text = "Hello $name\n" +
+                    "Screen width is $vm.screenWidth and \nScreen height is $vm.screenHeight",
+            modifier = modifier
+        )
     }
 }
+
