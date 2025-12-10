@@ -1,6 +1,7 @@
 package com.pstorli.wordrop.util
 
 import android.util.Log
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 /**
@@ -24,7 +25,7 @@ object Consts {
 
     val TAG_NAME                            = "Word Drop"
 
-    val SQ_SZ                               = 32.dp
+    val SQ_SZ: Dp = 32.dp
 
     val TOP                                 = 64.dp
 
